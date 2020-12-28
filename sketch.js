@@ -13,7 +13,12 @@ var bg = "sprites/bg1.png";
 var score = 0;
 
 function preload() {
-    getBackgroundImg();
+    //getBackgroundImg();
+    backgroundImg = loadImage("sprites/bg.png");
+    birdFlySound = loadSound("bird_flying.mp3");
+    pigSnortSound = loadSound("pig_snort.mp3");
+    birdSelectSound = loadSound("bird_select.mp3");
+
 }
 
 function setup(){
@@ -81,20 +86,27 @@ function draw(){
 }
 
 function mouseDragged(){
-    //if (gameState!=="launched"){
+    if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
-    //}
+        birdSelectSound.play();
+    }
 }
 
 
 function mouseReleased(){
     slingshot.fly();
+    birdFlySound.play();
     gameState = "launched";
 }
 
 function keyPressed(){
-    if(keyCode === 32){
+    if(keyCode === 32 && gameState === "launched"){
+        Matter.Body.setPosition(bird.body,{
+            x: 200,
+            y:50
+        })
        slingshot.attach(bird.body);
+       gameState = "onSling";
     }
 }
 
